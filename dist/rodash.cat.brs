@@ -1,4 +1,4 @@
-' VERSION: rodash 0.3.1
+' VERSION: rodash 0.3.4
 ' LICENSE: Permission is hereby granted, free of charge, to any person obtaining
 ' LICENSE: a copy of this software and associated documentation files (the
 ' LICENSE: "Software"), to deal in the Software without restriction, including
@@ -187,33 +187,20 @@ ai = CreateObject("roAppInfo")
 di = CreateObject("roDeviceInfo")
 if FindMemberFunction(di, "GetChannelClientId") <> invalid
 uniqueId = di.GetChannelClientId()
-else if FindMemberFunction(di, "GetClientTrackingId") <> invalid
-uniqueId = di.GetClientTrackingId()
 else if FindMemberFunction(di, "GetPublisherId") <> invalid
-uniqueId = di.GetPublisherId()
-else if FindMemberFunction(di, "GetDeviceUniqueId") <> invalid
 uniqueId = di.GetPublisherId()
 else
 uniqueId = ""
 end if
 if FindMemberFunction(di, "GetRIDA") <> invalid
 adId = di.GetRIDA()
-else if FindMemberFunction(di, "GetAdvertisingId") <> invalid
-adId = di.GetAdvertisingId()
 else
 adId = ""
 end if
 if FindMemberFunction(di, "IsRIDADisabled") <> invalid
 tracking = di.IsRIDADisabled()
-else if FindMemberFunction(di, "IsAdIdTrackingDisabled") <> invalid
-tracking = di.IsAdIdTrackingDisabled()
 else 
 tracking = false
-end if
-if FindMemberFunction(di, "GetDrmInfoEx") <> invalid
-drmInfo = di.GetDrmInfoEx()
-else if FindMemberFunction(di, "GetDrmInfo") <> invalid
-drmInfo = di.GetDrmInfo()
 end if
 profile =  {
 appInfo: {
@@ -229,7 +216,7 @@ model: di.GetModel()
 modelDetails: di.GetModelDetails()
 modelDisplayName: di.GetModelDisplayName()
 friendlyName: di.GetFriendlyName()
-version: di.GetVersion()
+version: di.GetOSVersion().major + "." + di.GetOSVersion().minor + di.GetOSVersion().build
 uniqueId: uniqueId
 advertisingId: adId
 adTrackingDisabled: tracking
@@ -248,7 +235,7 @@ features: {
 }
 locale: di.GetCurrentLocale()
 country: di.GetCountryCode()
-drm: di.GetDrmInfo()
+drm: di.GetDrmInfoEx()
 displayType: di.GetDisplayType()
 displayMode: di.GetDisplayMode()
 displayAspectRatio: di.GetDisplayAspectRatio()
@@ -258,9 +245,9 @@ displayProperties: di.GetDisplayProperties()
 supportedGraphicsResolutions: di.GetSupportedGraphicsResolutions()
 uiResolution: di.GetUIResolution()
 graphicsPlatform: di.GetGraphicsPlatform()
-videoDecodeInfo: di.GetVideoDecodeInfo()
+videoDecodeInfo: {} 'deprecated
 audioOutputChannel: di.GetAudioOutputChannel()
-audioDecodeInfo: di.GetAudioDecodeInfo()
+audioDecodeInfo: {} 'deprecated
 }
 }
 return profile

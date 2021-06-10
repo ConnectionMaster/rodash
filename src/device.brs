@@ -19,11 +19,7 @@ Function rodash_getDeviceProfile_() As Object
   ' Safe fallback for various unique identifiers
   if FindMemberFunction(di, "GetChannelClientId") <> invalid
     uniqueId = di.GetChannelClientId()
-  else if FindMemberFunction(di, "GetClientTrackingId") <> invalid
-    uniqueId = di.GetClientTrackingId()
   else if FindMemberFunction(di, "GetPublisherId") <> invalid
-    uniqueId = di.GetPublisherId()
-  else if FindMemberFunction(di, "GetDeviceUniqueId") <> invalid
     uniqueId = di.GetPublisherId()
   else
     uniqueId = ""
@@ -31,24 +27,14 @@ Function rodash_getDeviceProfile_() As Object
 
   if FindMemberFunction(di, "GetRIDA") <> invalid
     adId = di.GetRIDA()
-  else if FindMemberFunction(di, "GetAdvertisingId") <> invalid
-    adId = di.GetAdvertisingId()
   else
     adId = ""
   end if
 
   if FindMemberFunction(di, "IsRIDADisabled") <> invalid
     tracking = di.IsRIDADisabled()
-  else if FindMemberFunction(di, "IsAdIdTrackingDisabled") <> invalid
-    tracking = di.IsAdIdTrackingDisabled()
   else 
     tracking = false
-  end if
-
-  if FindMemberFunction(di, "GetDrmInfoEx") <> invalid
-    drmInfo = di.GetDrmInfoEx()
-  else if FindMemberFunction(di, "GetDrmInfo") <> invalid
-    drmInfo = di.GetDrmInfo()
   end if
 
   profile =  {
@@ -65,7 +51,7 @@ Function rodash_getDeviceProfile_() As Object
       modelDetails: di.GetModelDetails()
       modelDisplayName: di.GetModelDisplayName()
       friendlyName: di.GetFriendlyName()
-      version: di.GetVersion()
+      version: di.GetOSVersion().major + "." + di.GetOSVersion().minor + di.GetOSVersion().build
       uniqueId: uniqueId
       advertisingId: adId
       adTrackingDisabled: tracking
@@ -84,7 +70,7 @@ Function rodash_getDeviceProfile_() As Object
       }
       locale: di.GetCurrentLocale()
       country: di.GetCountryCode()
-      drm: di.GetDrmInfo()
+      drm: di.GetDrmInfoEx()
       displayType: di.GetDisplayType()
       displayMode: di.GetDisplayMode()
       displayAspectRatio: di.GetDisplayAspectRatio()
@@ -94,9 +80,9 @@ Function rodash_getDeviceProfile_() As Object
       supportedGraphicsResolutions: di.GetSupportedGraphicsResolutions()
       uiResolution: di.GetUIResolution()
       graphicsPlatform: di.GetGraphicsPlatform()
-      videoDecodeInfo: di.GetVideoDecodeInfo()
+      videoDecodeInfo: {} 'deprecated
       audioOutputChannel: di.GetAudioOutputChannel()
-      audioDecodeInfo: di.GetAudioDecodeInfo()
+      audioDecodeInfo: {} 'deprecated
     }
   }
   return profile
